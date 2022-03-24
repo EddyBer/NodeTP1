@@ -1,9 +1,8 @@
+const { randomUUID } = require('crypto');
 const express = require('express');
 var router = express.Router();
 const md5 = require('md5');
 var responseTime = require('response-time')
-const port = 2900
-
 const userRepository = require('./user-repository');
 
 router.use(express.json());
@@ -37,6 +36,7 @@ router.post('/users', (req, res) => {
     console.log(`request called at : ${new Date()}, ip:${req.ip}, time:, method:${req.method}, path:${req.path}`);
     let newUser = req.body
     newUser.password = md5(req.body.password)
+    newUser.id = randomUUID()
     userRepository.createUser(newUser)
     res.statusCode = 201
     res.send('Utilisateur créé\n');
