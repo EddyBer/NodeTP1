@@ -18,8 +18,24 @@ const getUserByFirstname = function(firstName) {
     return users
 }
 
+
+const getUserById = function(id) {
+    let users = []
+    user.forEach(elem => {
+        if (elem.id === parseInt(id)) {
+            users.push(elem)
+        }
+    })
+    return users
+}
+
 const updateUser = function(id, data) {
-    return undefined
+    for (const elem in user) {
+        if (parseInt(user[elem].id) === parseInt(id)) {
+            user[elem] = data
+            return user[elem]
+        }
+    }
 }
 
 const deleteUser = function(id) {
@@ -35,6 +51,8 @@ const deleteUser = function(id) {
 module.exports = {
     getUser,
     getUserByFirstname,
+    getUserById,
     createUser,
+    updateUser,
     deleteUser
 }

@@ -1,4 +1,5 @@
-const express = require('express')
+const express = require('express');
+const md5 = require('md5');
 const app = express()
 const port = 2900
 
@@ -19,16 +20,24 @@ app.get('/', (req, res) => {
     res.send("Bleg");
 });
 
-app.get('/user', (req, res) => {
+app.get('/users', (req, res) => {
+    console.log(`request called at : ${new Date()}, ip:${req.ip}, time:, method:${req.method},route:${req.route}`);
     res.send(userRepository.getUser());
 });
 
-app.get('/user/:firstname', (req, res) => {
+app.get('/users/:firstname', (req, res) => {
     res.send(userRepository.getUserByFirstname(req.params.firstname));
 });
 
-app.post('/user', (req, res) => {
-    userRepository.createUser(req.body)
+app.get('/users/Id/:id', (req, res) => {
+    res.send(userRepository.getUserById(req.params.id));
+});
+
+app.post('/users', (req, res) => {
+    let newUser = req.body
+    newUser.password = md5(req.body.password)
+    userRepository.createUser(newUser)
+    res.statusCode = 201
     res.send('Utilisateur créé\n');
 });
 
@@ -38,7 +47,8 @@ app.delete('/delete-user/:id', (req,res) => {
 })
 
 app.put('/update-user/:id', (req,res) => {
-
+    userRepository.updateUser(req.body.id, req.body)
+    res.send(`Utilisateur ${req.body.id} mis à jour`)
 })
 
 app.listen(port, () => {
